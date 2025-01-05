@@ -19,7 +19,7 @@ class TodoListViewModel: ObservableObject {
         isEditTodoMode ? .complete : .edit
     }
     
-    init(todos: [Todo],
+    init(todos: [Todo] = [],
          isEditTodoMode: Bool = false,
          removeTodos: [Todo] = [],
          isDisplayRemoveTodoAlert: Bool = false

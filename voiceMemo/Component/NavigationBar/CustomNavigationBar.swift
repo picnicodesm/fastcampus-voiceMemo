@@ -56,7 +56,6 @@ struct CustomNavigationBar: View {
         .frame(height: 20)
     }
 }
-
 struct CustomNavigationBar_Previews: PreviewProvider {
     static var previews: some View {
         CustomNavigationBar()
