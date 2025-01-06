@@ -9,12 +9,13 @@ struct OnboardingView: View {
     @StateObject private var pathModel = PathModel()
     @StateObject private var onboardingViewModel = OnboardingViewModel()
     @StateObject private var todoListViewModel = TodoListViewModel()
+    @StateObject private var memoListViewModel = MemoListViewModel()
     
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
-//            OnboardingContentView(onboardingViewModel: onboardingViewModel)
-            TodoListView()
-                .environmentObject(todoListViewModel)
+            //            OnboardingContentView(onboardingViewModel: onboardingViewModel)
+            MemoListView()
+                .environmentObject(memoListViewModel)
                 .navigationDestination(
                     for: PathType.self,
                     destination: { pathType in
@@ -28,15 +29,21 @@ struct OnboardingView: View {
                                 .navigationBarBackButtonHidden()
                                 .environmentObject(todoListViewModel)
                             
-                        case .memoView:
-                            MemoView()
-                                .navigationBarBackButtonHidden()
+                        case let .memoView(isCreateMode, memo):
+                            MemoView(
+                                memoViewModel: isCreateMode
+                                ? .init(memo: .init(title: "", content: "", date: .now))
+                                : .init(memo: memo ?? .init(title: "", content: "", date: .now)),
+                                isCreateMode: isCreateMode
+                            )
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(memoListViewModel)
                         }
                     }
                 )
         }
         .environmentObject(pathModel)
-  }
+    }
 }
 
 // MARK: - 온보딩 컨텐츠 뷰
@@ -152,7 +159,7 @@ private struct StartBtnView: View {
 }
 
 struct OnboardingView_Previews: PreviewProvider {
-  static var previews: some View {
-    OnboardingView()
-  }
+    static var previews: some View {
+        OnboardingView()
+    }
 }
