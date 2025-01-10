@@ -14,7 +14,7 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack(path: $pathModel.paths) {
             //            OnboardingContentView(onboardingViewModel: onboardingViewModel)
-            MemoListView()
+            VoiceRecorderView()
                 .environmentObject(memoListViewModel)
                 .navigationDestination(
                     for: PathType.self,
