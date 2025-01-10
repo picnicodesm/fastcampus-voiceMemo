@@ -7,19 +7,22 @@ import SwiftUI
 
 struct VoiceRecorderView: View {
     @StateObject private var voiceRecorderViewModel = VoiceRecorderViewModel()
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     
     var body: some View {
-        VStack {
-            TitleView()
-            
-            if voiceRecorderViewModel.recordedFiles.isEmpty {
-                AnnouncementView()
-            } else {
-                VoiceRecorderListView(voiceRecorderViewModel: voiceRecorderViewModel)
-                    .padding(.top, 15)
+        ZStack {
+            VStack {
+                TitleView()
+                
+                if voiceRecorderViewModel.recordedFiles.isEmpty {
+                    AnnouncementView()
+                } else {
+                    VoiceRecorderListView(voiceRecorderViewModel: voiceRecorderViewModel)
+                        .padding(.top, 15)
+                }
+                
+                Spacer()
             }
-            
-            Spacer()
             
             RecordBtnView(voiceRecorderViewModel: voiceRecorderViewModel)
                 .padding(.trailing, 20)
@@ -40,6 +43,12 @@ struct VoiceRecorderView: View {
         ) {
             Button("확인", role: .cancel) { }
         }
+        .onChange(
+            of: voiceRecorderViewModel.recordedFiles,
+            perform: { recordedFiles in
+                homeViewModel.setVoiceRecordersCount(recordedFiles.count)
+            }
+        )
     }
 }
 
@@ -211,7 +220,7 @@ private struct VoiceRecorderCellView: View {
                         )
                         
                         Spacer()
-                            .frame(height: 10)
+                            .frame(width: 10)
                         
                         Button(
                             action: {
@@ -310,5 +319,6 @@ private struct RecordBtnView: View {
 struct VoiceRecorderView_Previews: PreviewProvider {
     static var previews: some View {
         VoiceRecorderView()
+            .environmentObject(HomeViewModel())
     }
 }
