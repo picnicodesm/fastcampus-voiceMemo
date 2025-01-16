@@ -11,8 +11,7 @@ struct TodoListView: View {
     @EnvironmentObject private var homeViewModel: HomeViewModel
     
     var body: some View {
-        ZStack {
-            // 투두 셀 리스트
+        WriteBtnView {
             VStack {
                 if !todoListViewModel.todos.isEmpty {
                     CustomNavigationBar(
@@ -37,10 +36,8 @@ struct TodoListView: View {
                         .padding(.top, 20)
                 }
             }
-            
-            WriteTodoBtnView()
-                .padding(.trailing, 20)
-                .padding(.bottom, 50)
+        } action: {
+            pathModel.paths.append(.todoView)
         }
         .alert(
             "To do list \(todoListViewModel.removeTodosCount)개 삭제하시겠습니까?",

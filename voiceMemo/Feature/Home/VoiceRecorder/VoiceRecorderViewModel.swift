@@ -6,11 +6,7 @@
 import AVFoundation
 
 class VoiceRecorderViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    // AVAudioPlayerDelegate는 내부적으로 NSObject를 채택함 이 프로토콜은 Core Foundation 속성을 가진 타입이기에 객체들이 실행되는 런타임시에 런타임 매커니즘이 해당 프로토콜을 기반으로 동작하게 됨.
-    // 그렇기에 AVAudioPlayerDelegate를 채택하여 객체를 구현하기 위해서는 NSObjectPlayer 프로토콜을 채택하거나 NSObject를 상속받아서 해당 AVAudioPlayerDelegate가 간접적으로 이 런타임 매커니즘을 사용할 수 있게 만들 수 있습니다.
-    // 즉 둘 중 하나의 방식인데 NSObject를 상속받는 것이 더 단순해서 사용해봄.
-    // 만약 둘 다 채택 혹은 상속하지 않는다면 기본 AVAudioPlayerDelegate의 필수 구현 메서드를 모두 정의해야지만 사용할 수 있지만 간단히 NSObject를 상속받아서 해결할 수 있습니다.
-    
+
     @Published var isDisplayRemoveVoiceRecorderAlert: Bool
     @Published var isDisplayAlert: Bool
     @Published var alertMessage: String
@@ -183,7 +179,6 @@ extension VoiceRecorderViewModel {
             }
             
         } catch {
-            print("****")
             displayAlert(message: "음성메모 재생 중 오류가 발생했습니다.")
         }
     }
@@ -236,26 +231,5 @@ extension VoiceRecorderViewModel {
         }
         
         return (creationDate, duration)
-    }
-}
-
-extension VoiceRecorderViewModel {
-    private func enableBuiltInMic() {
-        // Get the shared audio session.
-        let session = AVAudioSession.sharedInstance()
-        
-        // Find the built-in microphone input.
-        guard let availableInputs = session.availableInputs,
-              let builtInMicInput = availableInputs.first(where: { $0.portType == .builtInMic }) else {
-            print("The device must have a built-in microphone.")
-            return
-        }
-        
-        // Make the built-in microphone input the preferred input.
-        do {
-            try session.setPreferredInput(builtInMicInput)
-        } catch {
-            print("Unable to set the built-in mic as the preferred input.")
-        }
     }
 }
